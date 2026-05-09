@@ -6,7 +6,7 @@ import pickle
 import pandas as pd
 
 # import the ml model
-with open('model.pkl', 'rb') as f:
+with open('model/model.pkl', 'rb') as f:
     model = pickle.load(f)
 
 # Allowed occupations inferred from the trained encoder categories.
@@ -76,6 +76,20 @@ class UserInput(BaseModel):
             return 2
         else:
             return 3
+
+# human readable       
+@app.get('/')
+def home():
+    return {'message':'Insurance Premium Prediction API'}
+
+# machine readable
+@app.get('/health')
+def health_check():
+    return {
+        'status': 'OK',
+        'version': MODEL_VERSION,
+        'model_loaded': model is not None
+    }
 
 @app.post('/predict')
 def predict_premium(data: UserInput):
